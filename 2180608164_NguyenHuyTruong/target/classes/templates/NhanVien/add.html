@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="_layout"
+      xmlns:custom="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Them Nhan Vien</title>
+</head>
+<body>
+<div layout:fragment="content" class="container body-content">
+    <h2>Them Nhan Vien</h2>
+    <form th:action="@{/NhanVien/add}" th:object="${NhanVien}" method="post">
+        <div class="form-group">
+            <label for="maNV">Mã Nhân viên</label>
+            <input type="text" id="maNV" th:field="*{maNV}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="tenNV">Tên Nhân Viên</label>
+            <input type="text" id="tenNV" th:field="*{tenNV}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="phai">Giới Tính</label>
+            <select id="phai" th:field="*{phai}" class="form-control">
+                <option value="NAM">NAM</option>
+                <option value="NU">NU</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="noiSinh">Nơi Sinh</label>
+            <input type="text" id="noiSinh" th:field="*{noiSinh}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="maPhong">Tên Phòng</label>
+            <select id="maPhong" th:field="*{phongBan.maPhong}" class="form-control">
+                <option th:each="phongBan : ${PhongBan}" th:value="${phongBan.maPhong}" th:text="${phongBan.tenPhong}">Phong Ban</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="luong">Lương</label>
+            <input type="number" id="luong" th:field="*{luong}" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Them</button>
+    </form>
+</div>
+</body>
+</html>

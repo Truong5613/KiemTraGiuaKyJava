@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="_layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:custom="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh Sach Nhan Vien</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a, .pagination span {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container body-content">
+    <span sec:authorize="hasAnyAuthority('ADMIN')">
+    <a th:href="@{/NhanVien/add}" class="btn btn-primary mb-3">Them Nhan Vien</a>
+    </span>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>Mã Nhân viên</th>
+            <th>Tên Nhân Viên</th>
+            <th>Giới Tính</th>
+            <th>Nơi Sinh</th>
+            <th>Tên Phòng</th>
+            <th>Lương</th>
+            <span sec:authorize="hasAnyAuthority('ADMIN')">
+            <th>Actions</th>
+            </span>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="nhanvien : ${nhanVienPage.getContent()}">
+            <td th:text="${nhanvien.maNV}"></td>
+            <td th:text="${nhanvien.tenNV}"></td>
+            <td>
+                <img th:src="@{${nhanvien.phai == 'NAM'} ? '/images/man.png' : '/images/woman.png'}" alt="Gender Image" width="64" height="64"/>
+            </td>
+            <td th:text="${nhanvien.noiSinh}"></td>
+            <td th:text="${nhanvien.phongBan.tenPhong}"></td>
+            <td th:text="${nhanvien.luong}"></td>
+            <span sec:authorize="hasAnyAuthority('ADMIN')">
+                <td>
+                    <a th:href="@{/NhanVien/edit/{id}(id=${nhanvien.maNV})}" class="btn btn-success btn-sm">Sửa</a>
+                    <a th:href="@{/NhanVien/delete/{id}(id=${nhanvien.maNV})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Xóa</a>
+                </td>
+            </span>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination-wrapper">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li th:classappend="${!nhanVienPage.hasPrevious()} ? 'disabled'">
+                    <a th:href="@{/NhanVien(page=${nhanVienPage.number - 1}, size=${nhanVienPage.size})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, nhanVienPage.totalPages - 1)}"
+                    th:classappend="${i == nhanVienPage.number} ? 'active'">
+                    <a th:href="@{/NhanVien(page=${i}, size=${nhanVienPage.size})}" th:text="${i + 1}"></a>
+                </li>
+                <li th:classappend="${!nhanVienPage.hasNext()} ? 'disabled'">
+                    <a th:href="@{/NhanVien(page=${nhanVienPage.number + 1}, size=${nhanVienPage.size})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
